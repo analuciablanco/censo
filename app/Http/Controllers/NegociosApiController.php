@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Casa;
+use App\Negocio;
 
-class CasasApiController extends Controller
+class NegociosApiController extends Controller
 {
     public function __construct()
     {
@@ -18,12 +18,9 @@ class CasasApiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $casas = 
-            Casa::where('id_user', $request->user()->id)->
-            get();
-        return $casas;
+        //
     }
 
     /**
@@ -34,28 +31,27 @@ class CasasApiController extends Controller
      */
     public function store(Request $request)
     {
-        // Crea la instancia del modelo
-        $nuevaCasa = new Casa();
-        // Llena el modelo con info de la solicitud
-        $nuevaCasa->id_user = $request->user()->id;
-        $nuevaCasa->calle = $request->input('calle');
-        $nuevaCasa->numero = $request->input('numero');
-        $nuevaCasa->numero_interior = $request->input('numero_interior');
-        $nuevaCasa->colonia = $request->input('colonia');
-        $nuevaCasa->numero_banos = $request->input('numero_banos');
-        $nuevaCasa->numero_habitantes = $request->input('numero_habitantes');
+        $nuevoNegocio = new Negocio();
 
-        // Arma una respuesta
+        $nuevoNegocio->id_user = $request->user()->id;
+        $nuevoNegocio->calle = $request->input('calle');
+        $nuevoNegocio->numero = $request->input('numero');
+        $nuevoNegocio->numero_interior = $request->input('numero_interior');
+        $nuevoNegocio->colonia = $request->input('colonia');
+        $nuevoNegocio->nombre_negocio = $request->input('nombre_negocio');
+        $nuevoNegocio->numero_empleados = $request->input('numero_empleados');
+        $nuevoNegocio->numero_banos = $request->input('numero_banos');
+
         $respuesta = array();
         $respuesta['exito'] = false;
 
-        // Valida si hay info en el modelo de nuevaCasa
-        if($nuevaCasa->save()) {
+        if($nuevoNegocio->save()) {
             $respuesta['exito'] = true;
         }
 
         // Regresa una respuesta
         return $respuesta;
+
     }
 
     /**
