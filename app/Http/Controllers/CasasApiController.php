@@ -20,10 +20,30 @@ class CasasApiController extends Controller
      */
     public function index(Request $request)
     {
+        // Cada respuesta regresa 20 casas.
+        $valorLimite = 20;
+
+        // Solicito información
+        $paginaActual = intval($request->input('pagina'));
+        if(!$paginaActual) {
+            $paginaActual = 1;
+        }
+
+        $numeroCasas = Casa::count();
+        $numeroPaginas = ceil($numeroCasas / $valorLimite);
         $casas = 
             Casa::where('id_user', $request->user()->id)->
-            get();
-        return $casas;
+            skip(($paginaActual -1) * $valorLimite)->take($valorLimite)->get();
+
+        // Construyo respuesta.
+        $respuesta = array();
+        $respuesta['total'] = $numeroCasas;
+        $respuesta['paginas'] = $numeroPaginas;
+        $respuesta['pagina_actual'] = $paginaActual;
+        $respuesta['casas'] = $casas;
+
+        // Envío respuesta.
+        return $respuesta;
     }
 
     /**
